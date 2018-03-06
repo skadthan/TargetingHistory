@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.dse.DseSession;
 import com.harmony2.dao.DispositionRecordDAO;
 import com.harmony2.dao.DispositionRecordRepository;
 import com.harmony2.dao.EmployeeDAO;
@@ -12,6 +15,7 @@ import com.harmony2.model.CustomerIdentifier;
 import com.harmony2.model.DispositionRecord;
 import com.harmony2.model.Employee;
 import com.harmony2.util.CassandraDAOTemplate;
+import com.harmony2.util.CassandraUtil;
 
 /**
  * DAOImpl class for Employee to perform CRUD operation.
@@ -27,13 +31,21 @@ public class DispositionDAOImpl implements DispositionRecordDAO {
     @Autowired
     private DispositionRecordRepository dispositionRecordRepository;
     
+    @Autowired
+    private CassandraUtil cassandraUtil;
+    
 
 	@Override
 	public DispositionRecord createDispositionRecord(DispositionRecord dispositionRec) {
 		// TODO Auto-generated method stub
+		//cassandraUtil.testClusterConnection(); //Takes lot of time to run
+		Session session = cassandraUtil.getPoolSession();
+		Row row=session.execute("select release_version from system.local").one();
+		System.out.println("release_version--> "+row.getString("release_version"));
+		dispositionRecordRepository.insert_customer_offer_count_by_date(dispositionRec.getSsoid(), dispositionRec.getOffername(), dispositionRec.getDisptype(), dispositionRec.getRecordtime());
 		return cassandraDAOTemplate.create(dispositionRec);
 	}
-
+   
 
 	@Override
 	public DispositionRecord updateDispositionRecord(DispositionRecord dispositionRec) {

@@ -366,3 +366,11 @@ CREATE TABLE ashu.customer_disposition (
     style text,
     PRIMARY KEY (ssoid, offername, dispositiontype, recordtime)
 ) WITH CLUSTERING ORDER BY (offername ASC, dispositiontype ASC, recordtime ASC);
+
+CREATE TABLE ashu.customer_offer_count_by_date(
+	ssoid text,
+	    offername text,
+	    dispositiontype text,
+	    dispositiondate date,
+	    dispositioncount counter,
+	PRIMARY KEY ((ssoid,offername,dispositiontype), dispositiondate));

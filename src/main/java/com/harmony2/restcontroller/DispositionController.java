@@ -25,7 +25,7 @@ public class DispositionController {
     private DispositionRecordService DispositionService;
     
     public DispositionController() {
-        System.out.println("EmployeeController()");
+        System.out.println("DispositionController()");
     }
          
     @RequestMapping(value = "/postdisposition", method = RequestMethod.POST)    
